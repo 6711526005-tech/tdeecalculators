@@ -1,82 +1,35 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="utf-8">
-  <title>แนะนำอาหารตาม TDEE</title>
+  <meta charset="UTF-8">
+  <title>แนะนำอาหาร</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<script src="navbar.js"></script>
-
-<div class="container">
-  <div class="card">
-    <h1>แนะนำอาหารตามพลังงาน</h1>
-    <p class="small">
-      ใส่พลังงานที่ต้องการต่อวัน (เช่น จาก TDEE) ระบบจะแนะนำอาหารไทยที่เข้าถึงง่าย
-    </p>
-
-    <label>พลังงานที่ต้องการ (kcal/วัน)</label>
-    <input type="number" id="calorieInput" placeholder="เช่น 2600">
-
-    <label>จำนวนมื้อ</label>
-    <select id="mealCount">
-      <option value="3">3 มื้อ</option>
-      <option value="4">4 มื้อ</option>
-      <option value="5">5 มื้อ</option>
-    </select>
-
-    <div class="center" style="margin-top:12px;">
-      <button class="btn" onclick="generateMeal()">แนะนำอาหาร</button>
-    </div>
-  </div>
-
-  <div id="mealResult" class="card" style="margin-top:16px; display:none;">
-    <h2>ตัวอย่างอาหารที่แนะนำ</h2>
-    <ul id="mealList"></ul>
-    <p class="small">
-      * เป็นตัวอย่างเพื่อการศึกษา อ้างอิงข้อมูลโภชนาการอาหารไทย (INMU)
-    </p>
-  </div>
+<div class="navbar">
+  <a href="index.html">Home</a>
+  <a href="calculator.html">คำนวณ TDEE</a>
+  <a href="food.html" class="active">แนะนำอาหาร</a>
+  <a href="knowledge.html">ทฤษฎี</a>
+  <a href="about.html">เกี่ยวกับเรา</a>
 </div>
 
-<script>
-const foods = [
-  { name: "ข้าวกะเพราไก่", kcal: 550 },
-  { name: "ข้าวไข่เจียว", kcal: 450 },
-  { name: "ข้าวผัดหมู", kcal: 520 },
-  { name: "ข้าวมันไก่", kcal: 600 },
-  { name: "ข้าวต้มหมู", kcal: 300 },
-  { name: "อกไก่ต้ม", kcal: 165 },
-  { name: "ไข่ต้ม 1 ฟอง", kcal: 75 },
-  { name: "กล้วยหอม", kcal: 120 },
-  { name: "นมจืด 1 กล่อง", kcal: 150 },
-  { name: "โยเกิร์ตไขมันต่ำ", kcal: 90 }
-];
+<div class="container">
+  <h1>แนะนำอาหารที่หาได้ในไทย</h1>
+  <p>ตัวอย่างอาหารสำหรับจัดมื้อให้เหมาะกับพลังงาน</p>
 
-function generateMeal(){
-  const cal = Number(document.getElementById("calorieInput").value);
-  const meals = Number(document.getElementById("mealCount").value);
-
-  if(!cal){
-    alert("กรุณาใส่พลังงานที่ต้องการ");
-    return;
-  }
-
-  const perMeal = Math.round(cal / meals);
-  const list = document.getElementById("mealList");
-  list.innerHTML = "";
-
-  for(let i=1;i<=meals;i++){
-    const food = foods[Math.floor(Math.random()*foods.length)];
-    const li = document.createElement("li");
-    li.innerText = `มื้อที่ ${i}: ${food.name} (~${food.kcal} kcal)`;
-    list.appendChild(li);
-  }
-
-  document.getElementById("mealResult").style.display = "block";
-}
-</script>
+  <div class="food-grid">
+    <div class="food-card">ข้าวกะเพราไก่ ~550 kcal</div>
+    <div class="food-card">ข้าวไข่เจียว ~500 kcal</div>
+    <div class="food-card">ข้าวผัดหมู ~600 kcal</div>
+    <div class="food-card">ข้าวต้มหมู ~350 kcal</div>
+    <div class="food-card">อกไก่ต้ม ~165 kcal</div>
+    <div class="food-card">ไข่ต้ม 1 ฟอง ~70 kcal</div>
+    <div class="food-card">กล้วยหอม ~120 kcal</div>
+    <div class="food-card">นมจืด ~150 kcal</div>
+  </div>
+</div>
 
 </body>
 </html>
