@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="utf-8" />
+  <title>คำนวณ TDEE & BMI</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Chart.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <!-- html2canvas for PNG -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+</head>
+<body>
+  <div class="navbar">
+    <a href="index.html">Home</a>
+    <a href="calculator.html" class="active">คำนวณ TDEE</a>
+    <a href="knowledge.html">ทฤษฎี</a>
+    <a href="about.html">เกี่ยวกับเรา</a>
+  </div>
+
+  <div class="container">
+    <div class="card" id="capture-area">
+      <h1>คำนวณ TDEE & BMI</h1>
+      <p class="small">กรอกข้อมูลด้านล่างเพื่อรับการประเมินและกราฟ</p>
+
+      <label>เพศ</label>
+      <select id="gender">
+        <option value="male">ชาย</option>
+        <option value="female">หญิง</option>
+      </select>
+
+      <div class="row">
+        <div class="col">
+          <label>อายุ (ปี)</label>
+          <input id="age" type="number" placeholder="เช่น 25">
+        </div>
+        <div class="col">
+          <label>ระดับกิจกรรม</label>
+          <select id="activity">
+            <option value="1.2">นั่งทำงาน (งานออฟฟิศ)</option> 
+            <option value="1.375">ออกกำลังกายเบาๆ (1-2 วัน/สัปดาห์)</option>
+            <option value="1.55">ออกกำลังกายระดับปานกลาง (3-5 วัน/สัปดาห์)</option>
+            <option value="1.725">ออกกำลังกายหนัก (6-7 วัน/สัปดาห์)</option>
+            <option value="1.9">นักกีฬา (วันละ2ครั้ง)</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="col">
+          <label>น้ำหนัก (กก.)</label>
+          <input id="weight" type="number" placeholder="เช่น 60">
+        </div>
+        <div class="col">
+          <label>ส่วนสูง (ซม.)</label>
+          <input id="height" type="number" placeholder="เช่น 170">
+        </div>
+      </div>
+
+      <div class="center">
+        <button class="btn" onclick="calculate()">คำนวณ</button>
+        <button class="btn secondary" onclick="resetForm()" style="margin-left:10px;">รีเซ็ต</button>
+      </div>
+
+      <div id="result" class="result-box" style="display:none;">
+
+        <!-- กล่องน้ำหนักที่เหมาะสม (แก้ id ให้ตรง) -->
+        <div class="card" style="margin-bottom:15px;">
+          <h3>น้ำหนักที่เหมาะสม</h3>
+          <p id="idealWeight">–</p>
+        </div>
+
+        <div class="result-row">
+          <div class="result-item">
+            <div class="kv">BMI</div>
+            <div id="bmiVal" class="value">-</div>
+            <div id="bmiStatus" class="small"></div>
+          </div>
+          <div class="result-item">
+            <div class="kv">BMR (kcal)</div>
+            <div id="bmrVal" class="value">-</div>
+            <div class="small">พลังงานพื้นฐานต่อวัน</div>
+          </div>
+          <div class="result-item">
+            <div class="kv">TDEE (kcal)</div>
+            <div id="tdeeVal" class="value">-</div>
+            <div class="small">พลังงานที่ใช้รวมกิจกรรม</div>
+          </div>
+        </div>
+
+        <div style="margin-top:12px;" class="small">
+          <strong>คำแนะนำสั้น:</strong> ปรับปริมาณแคลอรีโดยเพิ่ม/ลดประมาณ 300 kcal หากต้องการเพิ่มหรือลดน้ำหนักอย่างค่อยเป็นค่อยไป
+        </div>
+      </div>
+
+      <canvas id="chart" style="margin-top:18px; max-height:320px;"></canvas>
+
+      <div class="center" style="margin-top:14px;">
+        <button class="btn secondary" onclick="savePNG()">ดาวน์โหลดผลลัพธ์เป็น PNG</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
