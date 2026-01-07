@@ -4,17 +4,48 @@
 <meta charset="UTF-8">
 <title>วางแผนอาหารตามพลังงาน (Food Planner)</title>
 <link rel="stylesheet" href="style.css"> <style>
-/* CSS เดิมของคุณ */
-body{ font-family: Arial, sans-serif; background:#f4f7f6; margin:0; }
-.container{ max-width:900px; margin:30px auto; background:#fff; padding:25px; border-radius:16px; box-shadow:0 10px 25px rgba(0,0,0,.08); }
-h1{text-align:center;color:#2f855a}
-label{font-weight:bold;margin-top:10px;display:block}
-input,select{ width:100%;padding:10px;margin-top:5px; border-radius:10px;border:1px solid #ccc; }
-button.gen-btn{ margin-top:15px; padding:12px; width:100%; border:none; border-radius:12px; background:#2f855a; color:#fff; font-size:16px; cursor:pointer; }
-button.gen-btn:hover{background:#276749}
-.result{ margin-top:20px; background:#f0fdf4; padding:15px; border-radius:12px; }
-.meal{ background:#fff; border:1px solid #d1fae5; padding:10px; border-radius:10px; margin-top:10px; }
-.small-text{font-size:13px;color:#555}
+  /* เพิ่มระยะห่างเฉพาะจุดในหน้า Food */
+  .food-card {
+    background: var(--card-white);
+    padding: 35px;
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+    border: 1px solid rgba(255,255,255,0.8);
+    margin-bottom: 25px;
+  }
+
+  /* แก้ไขปัญหามันเบียดกัน */
+  select#meals {
+    margin-bottom: 25px; /* เพิ่มระยะห่างด้านล่างช่องเลือกมื้ออาหารก่อนถึงปุ่ม */
+  }
+
+  .meal-box {
+    background: #ffffff;
+    border-radius: 18px;
+    padding: 20px;
+    margin-bottom: 15px;
+    border-left: 6px solid #03a9f4;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+    transition: transform 0.3s ease;
+  }
+
+  .meal-box:hover {
+    transform: translateX(5px);
+  }
+
+  .meal-title {
+    font-weight: 700;
+    font-size: 18px;
+    color: #2d3748;
+    margin-bottom: 10px;
+    display: block;
+  }
+
+  .food-list {
+    margin: 0;
+    padding-left: 20px;
+    color: var(--text-muted);
+  }
 </style>
 </head>
 <body>
@@ -28,31 +59,34 @@ button.gen-btn:hover{background:#276749}
 </div>
 
 <div class="container">
-<h1>จัดเมนูอาหารตามพลังงาน</h1>
+  <div class="food-card">
+    <h1>จัดเมนูอาหารตามพลังงาน</h1>
+    <p class="small center" style="margin-bottom: 25px;">สุ่มรายการอาหารให้เหมาะสมกับเป้าหมายแคลอรี่ของคุณ</p>
 
-<label>พลังงานที่ต้องการ (kcal/วัน)</label>
-<input id="targetCal" type="number" placeholder="เช่น 2600">
+    <label>พลังงานที่ต้องการ (kcal/วัน)</label>
+    <input id="targetCal" type="number" placeholder="เช่น 2600">
 
-<label>จำนวนมื้อ</label>
-<select id="meals">
-  <option value="1">1 มื้อ</option>
-  <option value="2">2 มื้อ</option>
-  <option value="3">3 มื้อ</option>
-  <option value="4">4 มื้อ</option>
-  <option value="5">5 มื้อ</option>
-</select>
+    <label style="margin-top: 20px;">จำนวนมื้อ</label>
+    <select id="meals">
+      <option value="1">1 มื้อ</option>
+      <option value="2">2 มื้อ</option>
+      <option value="3">3 มื้อ</option>
+      <option value="4">4 มื้อ</option>
+      <option value="5">5 มื้อ</option>
+    </select>
 
-<button class="gen-btn" onclick="generateMeal()">จัดเมนูอาหาร</button>
+    <button class="gen-btn" onclick="generateMeal()">จัดเมนูอาหาร</button>
 
-<div id="output" class="result" style="display:none"></div>
+    <div id="output" class="result" style="display:none; border:none; background:transparent; padding:0; margin-top: 30px;"></div>
 
-<p class="small-text" style="margin-top:15px">
-* ข้อมูลพลังงานเป็นค่าเฉลี่ย อ้างอิงจากฐานข้อมูลโภชนาการอาหารไทย (INMU) 
-</p>
+    <p class="small" style="margin-top:30px; text-align: center; border-top: 1px solid #eee; padding-top: 15px;">
+      * ข้อมูลพลังงานเป็นค่าเฉลี่ย อ้างอิงจากฐานข้อมูลโภชนาการอาหารไทย (INMU)
+    </p>
+  </div>
 </div>
 
 <script>
-// ===== ฐานข้อมูลอาหาร 50 เมนู =====
+// ดึงข้อมูลอาหารจากฐานข้อมูล
 const foods = [
  {name:"ข้าวกะเพราไก่",cal:580},{name:"ข้าวกะเพราหมู",cal:650},
  {name:"ข้าวกะเพราอกไก่",cal:520},{name:"ข้าวผัดไข่",cal:560},
@@ -85,21 +119,24 @@ function generateMeal(){
 
  let perMeal = Math.round(target / meals);
  let used = [];
- let html = `<h3>เป้าหมาย ${target} kcal (${meals} มื้อ)</h3>`;
+ let html = `<h2 style="text-align:center; margin: 25px 0;">เป้าหมาย ${target} kcal</h2>`;
 
  for(let m=1;m<=meals;m++){
    let total=0, items=[];
-   let safetyCounter = 0; 
-   while(total < perMeal-100 && safetyCounter < 15){
+   let attempts = 0;
+   while(total < perMeal-80 && attempts < 20){
      let f = foods[Math.floor(Math.random()*foods.length)];
      if(!used.includes(f.name)){
        items.push(f);
        used.push(f.name);
        total += f.cal;
      }
-     safetyCounter++;
+     attempts++;
    }
-   html += `<div class="meal"><strong>มื้อที่ ${m} (~${total} kcal)</strong><ul>`;
+   html += `
+    <div class="meal-box">
+      <span class="meal-title">มื้อที่ ${m} (ประมาณ ${total} kcal)</span>
+      <ul class="food-list">`;
    items.forEach(i=>{
      html += `<li>${i.name} (${i.cal} kcal)</li>`;
    });
