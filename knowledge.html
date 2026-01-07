@@ -1,28 +1,43 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <title>ทฤษฎี</title>
+  <meta charset="utf-8" />
+  <title>ทฤษฎี - BMR / TDEE / BMI</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <div class="navbar">
+    <a href="index.html">Home</a>
+    <a href="calculator.html">คำนวณ TDEE</a>
+    <a href="knowledge.html" class="active">ทฤษฎี</a>
+    <a href="about.html">เกี่ยวกับเรา</a>
+  </div>
 
-<div class="navbar">
-  <a href="index.html">Home</a>
-  <a href="calculator.html">คำนวณ TDEE</a>
-  <a href="food.html">แนะนำอาหาร</a>
-  <a href="knowledge.html" class="active">ทฤษฎี</a>
-  <a href="about.html">เกี่ยวกับเรา</a>
-</div>
+  <div class="container">
+    <div class="card">
+      <h1>ความหมายและสูตรที่ใช้</h1>
+      <h2>BMR (Basal Metabolic Rate)</h2>
+      <p class="small">BMR คือ พลังงานที่ร่างกายใช้ขณะพัก เพื่อรักษาการทำงานพื้นฐานของร่างกาย (หายใจ อุณหภูมิ ฯลฯ) สูตรที่ใช้คือ <em>Mifflin-St Jeor</em>:</p>
+      <p class="small"><strong>ชาย:</strong> BMR = 10×น้ำหนัก(กก.) + 6.25×ส่วนสูง(ซม.) − 5×อายุ(ปี) + 5</p>
+      <p class="small"><strong>หญิง:</strong> BMR = 10×น้ำหนัก(กก.) + 6.25×ส่วนสูง(ซม.) − 5×อายุ(ปี) − 161</p>
 
-<div class="container">
-  <h1>ทฤษฎีที่เกี่ยวข้อง</h1>
-  <p>
-    TDEE (Total Daily Energy Expenditure)  
-    คือพลังงานทั้งหมดที่ร่างกายใช้ต่อวัน  
-    คำนวณจาก BMR และระดับกิจกรรม
-  </p>
-</div>
+      <h2>TDEE (Total Daily Energy Expenditure)</h2>
+      <p class="small">TDEE = BMR × ตัวคูณกิจกรรม (Activity Factor) ซึ่งตัวคูณสะท้อนระดับการเคลื่อนไหว/การออกกำลังกาย</p>
 
+      <h2>BMI (Body Mass Index)</h2>
+      <p class="small">BMI = น้ำหนัก(กก.) ÷ (ส่วนสูง(ม.)²) — ใช้ประเมินความสัมพันธ์ระหว่างน้ำหนักและส่วนสูง โดยมีเกณฑ์ทั่วไป:</p>
+      <ul class="small">
+        <li>&lt; 18.5 = น้ำหนักน้อย</li>
+        <li>18.5 – 22.9 = ปกติ</li>
+        <li>23 – 24.9 = น้ำหนักเกิน</li>
+        <li>25 – 29.9 = อ้วนระดับ 1</li>
+        <li>≥ 30 = อ้วนระดับ 2</li>
+      </ul>
+
+      <div class="small" style="margin-top:10px;">
+        <strong>ข้อควรระวัง:</strong> ค่าที่ได้เป็นค่าโดยประมาณ — หากต้องการวัดเชิงลึก ควรใช้การวัดองค์ประกอบร่างกาย (Body Composition) และปรึกษาผู้เชี่ยวชาญด้านโภชนาการ
+      </div>
+    </div>
+  </div>
 </body>
 </html>
