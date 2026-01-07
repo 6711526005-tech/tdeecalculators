@@ -190,3 +190,73 @@ input, select {
   border-left: 5px solid #03a9f4;
   box-shadow: 0 4px 6px rgba(0,0,0,0.02);
 }
+
+/* --- ส่วนที่เน้นผลลัพธ์ตัวเลขให้เด่นขึ้น --- */
+.result-item {
+  flex: 1;
+  min-width: 160px;
+  background: #ffffff;
+  padding: 20px 15px; /* เพิ่มพื้นที่ */
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(15,23,42,0.08);
+  text-align: center;
+  border: 1px solid rgba(0,0,0,0.02);
+  transition: transform 0.3s ease;
+}
+
+.result-item:hover {
+  transform: translateY(-5px); /* เวลาเมาส์ชี้ให้ขยับนิดๆ ดูมีมิติ */
+}
+
+.kv { 
+  font-size: 14px; 
+  color: var(--text-muted); 
+  font-weight: 400;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+/* เน้นตัวเลขผลลัพธ์ให้ใหญ่และเด่น */
+.value { 
+  display: block;
+  font-weight: 800; 
+  font-size: 28px; /* ขยายขนาดตัวเลข */
+  background: var(--nav-gradient);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 5px 0;
+}
+
+/* สถานะ BMI ให้ดูอ่านง่าย */
+#bmiStatus {
+  display: inline-block;
+  padding: 4px 12px;
+  background: #f0f4f8;
+  border-radius: 20px;
+  font-weight: 600;
+  color: #2e8b57;
+  margin-top: 8px;
+}
+
+/* --- ส่วนปุ่ม SAVE เป็น PNG (สีส้ม) --- */
+.btn-save-png {
+  background: var(--orange-gradient) !important;
+  color: #fff !important;
+  box-shadow: 0 4px 12px rgba(245, 124, 0, 0.2);
+  border: none;
+  margin-top: 20px;
+  width: 100%;
+  padding: 16px;
+  border-radius: 14px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 17px;
+  font-family: 'Kanit', sans-serif;
+  transition: all 0.3s ease;
+}
+
+.btn-save-png:hover {
+  box-shadow: 0 8px 25px rgba(245, 124, 0, 0.5); /* เงาฟุ้งสีส้มตามที่ขอ */
+  transform: translateY(-3px);
+  filter: brightness(1.1);
+}
