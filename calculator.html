@@ -56,10 +56,15 @@
         </div>
       </div>
 
-      <div class="center">
-        <button class="btn" onclick="calculate()">คำนวณ</button>
-        <button class="btn secondary" onclick="resetForm()" style="margin-left:10px;">รีเซ็ต</button>
-      </div>
+      <div class="row">
+  <div class="col">
+    <button class="btn btn-primary" onclick="calculate()">คำนวณผลลัพธ์</button>
+  </div>
+  <div class="col">
+    <button class="btn btn-reset" onclick="location.reload()">รีเซ็ตข้อมูล</button>
+  </div>
+</div>
+
 
       <div id="result" class="result-box" style="display:none;">
 
@@ -88,14 +93,14 @@
         </div>
 
         <div style="margin-top:12px;" class="small">
-          <strong>คำแนะนำสั้น:</strong> ปรับปริมาณแคลอรีโดยเพิ่ม/ลดประมาณ 300 kcal หากต้องการเพิ่มหรือลดน้ำหนักอย่างค่อยเป็นค่อยไป
+          <strong>คำแนะนำ:</strong> ปรับปริมาณแคลอรีโดยเพิ่ม/ลดประมาณ 300 kcal หากต้องการเพิ่มหรือลดน้ำหนักอย่างค่อยเป็นค่อยไป
         </div>
       </div>
 
       <canvas id="chart" style="margin-top:18px; max-height:320px;"></canvas>
 
       <div class="center" style="margin-top:14px;">
-        <button class="btn secondary" onclick="savePNG()">ดาวน์โหลดผลลัพธ์เป็น PNG</button>
+        <button class="btn secondary" onclick="savePNG()">SAVEเป็นPNG</button>
       </div>
     </div>
   </div>
@@ -103,4 +108,3 @@
   <script src="app.js"></script>
 </body>
 </html>
-
