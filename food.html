@@ -1,35 +1,143 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-  <meta charset="UTF-8">
-  <title>แนะนำอาหาร</title>
-  <link rel="stylesheet" href="style.css">
+<meta charset="UTF-8">
+<title>วางแผนอาหารตามพลังงาน (Food Planner)</title>
+<style>
+body{
+  font-family: Arial, sans-serif;
+  background:#f4f7f6;
+}
+.container{
+  max-width:900px;
+  margin:30px auto;
+  background:#fff;
+  padding:25px;
+  border-radius:16px;
+  box-shadow:0 10px 25px rgba(0,0,0,.08);
+}
+h1{text-align:center;color:#2f855a}
+label{font-weight:bold;margin-top:10px;display:block}
+input,select{
+  width:100%;padding:10px;margin-top:5px;
+  border-radius:10px;border:1px solid #ccc;
+}
+button{
+  margin-top:15px;
+  padding:12px;
+  width:100%;
+  border:none;
+  border-radius:12px;
+  background:#2f855a;
+  color:#fff;
+  font-size:16px;
+  cursor:pointer;
+}
+button:hover{background:#276749}
+.result{
+  margin-top:20px;
+  background:#f0fdf4;
+  padding:15px;
+  border-radius:12px;
+}
+.meal{
+  background:#fff;
+  border:1px solid #d1fae5;
+  padding:10px;
+  border-radius:10px;
+  margin-top:10px;
+}
+.small{font-size:13px;color:#555}
+</style>
 </head>
 <body>
 
-<div class="navbar">
-  <a href="index.html">Home</a>
-  <a href="calculator.html">คำนวณ TDEE</a>
-  <a href="food.html" class="active">แนะนำอาหาร</a>
-  <a href="knowledge.html">ทฤษฎี</a>
-  <a href="about.html">เกี่ยวกับเรา</a>
-</div>
-
 <div class="container">
-  <h1>แนะนำอาหารที่หาได้ในไทย</h1>
-  <p>ตัวอย่างอาหารสำหรับจัดมื้อให้เหมาะกับพลังงาน</p>
+<h1>จัดเมนูอาหารตามพลังงาน</h1>
 
-  <div class="food-grid">
-    <div class="food-card">ข้าวกะเพราไก่ ~550 kcal</div>
-    <div class="food-card">ข้าวไข่เจียว ~500 kcal</div>
-    <div class="food-card">ข้าวผัดหมู ~600 kcal</div>
-    <div class="food-card">ข้าวต้มหมู ~350 kcal</div>
-    <div class="food-card">อกไก่ต้ม ~165 kcal</div>
-    <div class="food-card">ไข่ต้ม 1 ฟอง ~70 kcal</div>
-    <div class="food-card">กล้วยหอม ~120 kcal</div>
-    <div class="food-card">นมจืด ~150 kcal</div>
-  </div>
+<label>พลังงานที่ต้องการ (kcal/วัน)</label>
+<input id="targetCal" type="number" placeholder="เช่น 2600">
+
+<label>จำนวนมื้อ</label>
+<select id="meals">
+  <option value="1">1 มื้อ</option>
+  <option value="2">2 มื้อ</option>
+  <option value="3">3 มื้อ</option>
+  <option value="4">4 มื้อ</option>
+  <option value="5">5 มื้อ</option>
+</select>
+
+<button onclick="generateMeal()">จัดเมนูอาหาร</button>
+
+<div id="output" class="result" style="display:none"></div>
+
+<p class="small" style="margin-top:15px">
+* ข้อมูลพลังงานเป็นค่าเฉลี่ย อ้างอิงจากฐานข้อมูลโภชนาการอาหารไทย (INMU)  
+ใช้เพื่อการศึกษาและงานวิจัยเท่านั้น
+</p>
 </div>
+
+<script>
+// ===== ฐานข้อมูลอาหาร 50 เมนู =====
+const foods = [
+ {name:"ข้าวกะเพราไก่",cal:580},{name:"ข้าวกะเพราหมู",cal:650},
+ {name:"ข้าวกะเพราอกไก่",cal:520},{name:"ข้าวผัดไข่",cal:560},
+ {name:"ข้าวผัดหมู",cal:650},{name:"ข้าวผัดไก่",cal:620},
+ {name:"ข้าวไข่เจียว",cal:500},{name:"ข้าวไข่เจียวหมูสับ",cal:600},
+ {name:"ข้าวหมูแดง",cal:650},{name:"ข้าวหมูกรอบ",cal:720},
+ {name:"ข้าวมันไก่",cal:680},{name:"ข้าวหน้าไก่",cal:620},
+ {name:"ข้าวต้มหมู",cal:420},{name:"ข้าวต้มไก่",cal:400},
+ {name:"ข้าวคลุกกะปิ",cal:600},{name:"ข้าวราดผัดผักรวม",cal:450},
+ {name:"ข้าวผัดพริกแกงหมู",cal:650},{name:"ข้าวผัดพริกแกงไก่",cal:620},
+ {name:"ข้าวผัดปลากระป๋อง",cal:550},{name:"ข้าวผัดกะเพราปลาทอด",cal:700},
+
+ {name:"อกไก่ต้ม",cal:165},{name:"ไก่ย่าง",cal:240},
+ {name:"หมูย่าง",cal:290},{name:"ไข่ต้ม",cal:75},
+ {name:"ไข่ดาว",cal:95},{name:"ไข่คน",cal:120},
+ {name:"ปลาทูทอด",cal:200},{name:"ปลานึ่งซีอิ๊ว",cal:180},
+ {name:"เต้าหู้ขาวนึ่ง",cal:80},{name:"หมูทอดกระเทียม",cal:310},
+
+ {name:"กล้วยหอม",cal:105},{name:"กล้วยน้ำว้า",cal:120},
+ {name:"แอปเปิล",cal:95},{name:"ส้ม",cal:60},
+ {name:"แตงโม",cal:45},{name:"มะละกอสุก",cal:55},
+ {name:"ข้าวโพดต้ม",cal:130},{name:"มันเทศนึ่ง",cal:160},
+ {name:"นมจืด",cal:120},{name:"นมถั่วเหลือง",cal:110},
+ {name:"โยเกิร์ตธรรมชาติ",cal:90},{name:"ขนมปังโฮลวีต",cal:90},
+ {name:"เวย์โปรตีน 1 สกู๊ป",cal:120},{name:"ถั่วลิสงคั่ว",cal:170}
+];
+
+// ===== ฟังก์ชันจัดเมนู =====
+function generateMeal(){
+ const target = parseInt(document.getElementById("targetCal").value);
+ const meals = parseInt(document.getElementById("meals").value);
+
+ if(!target){ alert("กรุณาใส่พลังงาน"); return; }
+
+ let perMeal = Math.round(target / meals);
+ let used = [];
+ let html = `<h3>เป้าหมาย ${target} kcal (${meals} มื้อ)</h3>`;
+
+ for(let m=1;m<=meals;m++){
+   let total=0, items=[];
+   while(total < perMeal-100){
+     let f = foods[Math.floor(Math.random()*foods.length)];
+     if(!used.includes(f.name)){
+       items.push(f);
+       used.push(f.name);
+       total += f.cal;
+     }
+   }
+   html += `<div class="meal"><strong>มื้อที่ ${m} (~${total} kcal)</strong><ul>`;
+   items.forEach(i=>{
+     html += `<li>${i.name} (${i.cal} kcal)</li>`;
+   });
+   html += `</ul></div>`;
+ }
+
+ document.getElementById("output").style.display="block";
+ document.getElementById("output").innerHTML = html;
+}
+</script>
 
 </body>
 </html>
