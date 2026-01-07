@@ -3,54 +3,29 @@
 <head>
 <meta charset="UTF-8">
 <title>วางแผนอาหารตามพลังงาน (Food Planner)</title>
-<style>
-body{
-  font-family: Arial, sans-serif;
-  background:#f4f7f6;
-}
-.container{
-  max-width:900px;
-  margin:30px auto;
-  background:#fff;
-  padding:25px;
-  border-radius:16px;
-  box-shadow:0 10px 25px rgba(0,0,0,.08);
-}
+<link rel="stylesheet" href="style.css"> <style>
+/* CSS เดิมของคุณ */
+body{ font-family: Arial, sans-serif; background:#f4f7f6; margin:0; }
+.container{ max-width:900px; margin:30px auto; background:#fff; padding:25px; border-radius:16px; box-shadow:0 10px 25px rgba(0,0,0,.08); }
 h1{text-align:center;color:#2f855a}
 label{font-weight:bold;margin-top:10px;display:block}
-input,select{
-  width:100%;padding:10px;margin-top:5px;
-  border-radius:10px;border:1px solid #ccc;
-}
-button{
-  margin-top:15px;
-  padding:12px;
-  width:100%;
-  border:none;
-  border-radius:12px;
-  background:#2f855a;
-  color:#fff;
-  font-size:16px;
-  cursor:pointer;
-}
-button:hover{background:#276749}
-.result{
-  margin-top:20px;
-  background:#f0fdf4;
-  padding:15px;
-  border-radius:12px;
-}
-.meal{
-  background:#fff;
-  border:1px solid #d1fae5;
-  padding:10px;
-  border-radius:10px;
-  margin-top:10px;
-}
-.small{font-size:13px;color:#555}
+input,select{ width:100%;padding:10px;margin-top:5px; border-radius:10px;border:1px solid #ccc; }
+button.gen-btn{ margin-top:15px; padding:12px; width:100%; border:none; border-radius:12px; background:#2f855a; color:#fff; font-size:16px; cursor:pointer; }
+button.gen-btn:hover{background:#276749}
+.result{ margin-top:20px; background:#f0fdf4; padding:15px; border-radius:12px; }
+.meal{ background:#fff; border:1px solid #d1fae5; padding:10px; border-radius:10px; margin-top:10px; }
+.small-text{font-size:13px;color:#555}
 </style>
 </head>
 <body>
+
+<div class="navbar">
+  <a href="index.html">Home</a>
+  <a href="calculator.html">คำนวณ TDEE</a>
+  <a href="food.html" class="active">จัดเมนูอาหาร</a>
+  <a href="knowledge.html">ทฤษฎี</a>
+  <a href="about.html">เกี่ยวกับเรา</a>
+</div>
 
 <div class="container">
 <h1>จัดเมนูอาหารตามพลังงาน</h1>
@@ -67,13 +42,12 @@ button:hover{background:#276749}
   <option value="5">5 มื้อ</option>
 </select>
 
-<button onclick="generateMeal()">จัดเมนูอาหาร</button>
+<button class="gen-btn" onclick="generateMeal()">จัดเมนูอาหาร</button>
 
 <div id="output" class="result" style="display:none"></div>
 
-<p class="small" style="margin-top:15px">
-* ข้อมูลพลังงานเป็นค่าเฉลี่ย อ้างอิงจากฐานข้อมูลโภชนาการอาหารไทย (INMU)  
-ใช้เพื่อการศึกษาและงานวิจัยเท่านั้น
+<p class="small-text" style="margin-top:15px">
+* ข้อมูลพลังงานเป็นค่าเฉลี่ย อ้างอิงจากฐานข้อมูลโภชนาการอาหารไทย (INMU) 
 </p>
 </div>
 
@@ -90,13 +64,11 @@ const foods = [
  {name:"ข้าวคลุกกะปิ",cal:600},{name:"ข้าวราดผัดผักรวม",cal:450},
  {name:"ข้าวผัดพริกแกงหมู",cal:650},{name:"ข้าวผัดพริกแกงไก่",cal:620},
  {name:"ข้าวผัดปลากระป๋อง",cal:550},{name:"ข้าวผัดกะเพราปลาทอด",cal:700},
-
  {name:"อกไก่ต้ม",cal:165},{name:"ไก่ย่าง",cal:240},
  {name:"หมูย่าง",cal:290},{name:"ไข่ต้ม",cal:75},
  {name:"ไข่ดาว",cal:95},{name:"ไข่คน",cal:120},
  {name:"ปลาทูทอด",cal:200},{name:"ปลานึ่งซีอิ๊ว",cal:180},
  {name:"เต้าหู้ขาวนึ่ง",cal:80},{name:"หมูทอดกระเทียม",cal:310},
-
  {name:"กล้วยหอม",cal:105},{name:"กล้วยน้ำว้า",cal:120},
  {name:"แอปเปิล",cal:95},{name:"ส้ม",cal:60},
  {name:"แตงโม",cal:45},{name:"มะละกอสุก",cal:55},
@@ -106,11 +78,9 @@ const foods = [
  {name:"เวย์โปรตีน 1 สกู๊ป",cal:120},{name:"ถั่วลิสงคั่ว",cal:170}
 ];
 
-// ===== ฟังก์ชันจัดเมนู =====
 function generateMeal(){
  const target = parseInt(document.getElementById("targetCal").value);
  const meals = parseInt(document.getElementById("meals").value);
-
  if(!target){ alert("กรุณาใส่พลังงาน"); return; }
 
  let perMeal = Math.round(target / meals);
@@ -119,13 +89,15 @@ function generateMeal(){
 
  for(let m=1;m<=meals;m++){
    let total=0, items=[];
-   while(total < perMeal-100){
+   let safetyCounter = 0; 
+   while(total < perMeal-100 && safetyCounter < 15){
      let f = foods[Math.floor(Math.random()*foods.length)];
      if(!used.includes(f.name)){
        items.push(f);
        used.push(f.name);
        total += f.cal;
      }
+     safetyCounter++;
    }
    html += `<div class="meal"><strong>มื้อที่ ${m} (~${total} kcal)</strong><ul>`;
    items.forEach(i=>{
@@ -133,11 +105,9 @@ function generateMeal(){
    });
    html += `</ul></div>`;
  }
-
  document.getElementById("output").style.display="block";
  document.getElementById("output").innerHTML = html;
 }
 </script>
-
 </body>
 </html>
