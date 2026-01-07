@@ -2,50 +2,30 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<title>วางแผนอาหารตามพลังงาน (Food Planner)</title>
-<link rel="stylesheet" href="style.css"> <style>
-  /* เพิ่มระยะห่างเฉพาะจุดในหน้า Food */
-  .food-card {
-    background: var(--card-white);
-    padding: 35px;
-    border-radius: 24px;
-    box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-    border: 1px solid rgba(255,255,255,0.8);
-    margin-bottom: 25px;
-  }
+<title>วางแผนอาหารสารอาหารครบถ้วน (P/C/F)</title>
+<link rel="stylesheet" href="style.css">
+<style>
+  .food-card { background: var(--card-white); padding: 35px; border-radius: 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 1px solid rgba(255,255,255,0.8); margin-bottom: 25px; }
+  
+  .meal-box { background: #ffffff; border-radius: 18px; padding: 20px; margin-bottom: 20px; border-left: 6px solid #03a9f4; box-shadow: 0 4px 12px rgba(0,0,0,0.03); position: relative; }
+  
+  .meal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; }
+  .meal-title { font-weight: 700; font-size: 18px; color: #2d3748; }
+  
+  .reroll-btn { background: #edf2f7; border: none; padding: 6px 12px; border-radius: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: #4a5568; transition: all 0.2s; }
+  .reroll-btn:hover { background: #e2e8f0; color: #2d3748; }
 
-  /* แก้ไขปัญหามันเบียดกัน */
-  select#meals {
-    margin-bottom: 25px; /* เพิ่มระยะห่างด้านล่างช่องเลือกมื้ออาหารก่อนถึงปุ่ม */
-  }
+  .food-item { margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px dashed #eee; display: flex; justify-content: space-between; }
+  .pcf-tag { font-size: 12px; color: #718096; margin-top: 4px; }
+  
+  .meal-summary { display: flex; gap: 10px; margin-top: 10px; padding-top: 10px; border-top: 1px solid #edf2f7; font-size: 13px; font-weight: 600; }
+  .p-color { color: #e53e3e; } 
+  .c-color { color: #3182ce; } 
+  .f-color { color: #d69e2e; }
 
-  .meal-box {
-    background: #ffffff;
-    border-radius: 18px;
-    padding: 20px;
-    margin-bottom: 15px;
-    border-left: 6px solid #03a9f4;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
-    transition: transform 0.3s ease;
-  }
-
-  .meal-box:hover {
-    transform: translateX(5px);
-  }
-
-  .meal-title {
-    font-weight: 700;
-    font-size: 18px;
-    color: #2d3748;
-    margin-bottom: 10px;
-    display: block;
-  }
-
-  .food-list {
-    margin: 0;
-    padding-left: 20px;
-    color: var(--text-muted);
-  }
+  /* แก้ไขปุ่มเบียด: เพิ่มระยะห่างจากช่อง select */
+  #meals { margin-bottom: 30px !important; }
+  .gen-btn { margin-top: 10px; margin-bottom: 10px; }
 </style>
 </head>
 <body>
@@ -60,90 +40,196 @@
 
 <div class="container">
   <div class="food-card">
-    <h1>จัดเมนูอาหารตามพลังงาน</h1>
-    <p class="small center" style="margin-bottom: 25px;">สุ่มรายการอาหารให้เหมาะสมกับเป้าหมายแคลอรี่ของคุณ</p>
+    <h1>จัดเมนูอาหาร </h1>
+    <p class="small center">เมนูแนะนำ</p>
 
     <label>พลังงานที่ต้องการ (kcal/วัน)</label>
-    <input id="targetCal" type="number" placeholder="เช่น 2600">
+    <input id="targetCal" type="number" placeholder="เช่น 2000">
 
-    <label style="margin-top: 20px;">จำนวนมื้อ</label>
+    <label style="margin-top: 15px;">จำนวนมื้อ</label>
     <select id="meals">
       <option value="1">1 มื้อ</option>
       <option value="2">2 มื้อ</option>
-      <option value="3">3 มื้อ</option>
+      <option value="3" selected>3 มื้อ</option>
       <option value="4">4 มื้อ</option>
       <option value="5">5 มื้อ</option>
     </select>
 
-    <button class="gen-btn" onclick="generateMeal()">จัดเมนูอาหาร</button>
+    <button class="gen-btn" onclick="generateAllMeals()">🔄สร้าง</button>
 
-    <div id="output" class="result" style="display:none; border:none; background:transparent; padding:0; margin-top: 30px;"></div>
-
-    <p class="small" style="margin-top:30px; text-align: center; border-top: 1px solid #eee; padding-top: 15px;">
-      * ข้อมูลพลังงานเป็นค่าเฉลี่ย อ้างอิงจากฐานข้อมูลโภชนาการอาหารไทย (INMU)
-    </p>
+    <div id="output" style="margin-top: 30px;"></div>
   </div>
 </div>
 
 <script>
-// ดึงข้อมูลอาหารจากฐานข้อมูล
+// ===== ฐานข้อมูลอาหาร 80 รายการ (คละแหล่งที่มา: ตามสั่ง, 7-11, ห้าง, สายสุขภาพ) =====
 const foods = [
- {name:"ข้าวกะเพราไก่",cal:580},{name:"ข้าวกะเพราหมู",cal:650},
- {name:"ข้าวกะเพราอกไก่",cal:520},{name:"ข้าวผัดไข่",cal:560},
- {name:"ข้าวผัดหมู",cal:650},{name:"ข้าวผัดไก่",cal:620},
- {name:"ข้าวไข่เจียว",cal:500},{name:"ข้าวไข่เจียวหมูสับ",cal:600},
- {name:"ข้าวหมูแดง",cal:650},{name:"ข้าวหมูกรอบ",cal:720},
- {name:"ข้าวมันไก่",cal:680},{name:"ข้าวหน้าไก่",cal:620},
- {name:"ข้าวต้มหมู",cal:420},{name:"ข้าวต้มไก่",cal:400},
- {name:"ข้าวคลุกกะปิ",cal:600},{name:"ข้าวราดผัดผักรวม",cal:450},
- {name:"ข้าวผัดพริกแกงหมู",cal:650},{name:"ข้าวผัดพริกแกงไก่",cal:620},
- {name:"ข้าวผัดปลากระป๋อง",cal:550},{name:"ข้าวผัดกะเพราปลาทอด",cal:700},
- {name:"อกไก่ต้ม",cal:165},{name:"ไก่ย่าง",cal:240},
- {name:"หมูย่าง",cal:290},{name:"ไข่ต้ม",cal:75},
- {name:"ไข่ดาว",cal:95},{name:"ไข่คน",cal:120},
- {name:"ปลาทูทอด",cal:200},{name:"ปลานึ่งซีอิ๊ว",cal:180},
- {name:"เต้าหู้ขาวนึ่ง",cal:80},{name:"หมูทอดกระเทียม",cal:310},
- {name:"กล้วยหอม",cal:105},{name:"กล้วยน้ำว้า",cal:120},
- {name:"แอปเปิล",cal:95},{name:"ส้ม",cal:60},
- {name:"แตงโม",cal:45},{name:"มะละกอสุก",cal:55},
- {name:"ข้าวโพดต้ม",cal:130},{name:"มันเทศนึ่ง",cal:160},
- {name:"นมจืด",cal:120},{name:"นมถั่วเหลือง",cal:110},
- {name:"โยเกิร์ตธรรมชาติ",cal:90},{name:"ขนมปังโฮลวีต",cal:90},
- {name:"เวย์โปรตีน 1 สกู๊ป",cal:120},{name:"ถั่วลิสงคั่ว",cal:170}
+  // --- หมวดจานหลัก (Main - 40 รายการ) ---
+  { name: "ข้าวกะเพราอกไก่+ไข่ดาว", cal: 520, p: 35, c: 55, f: 18, cat: "main" },
+  { name: "ข้าวกะเพราหมูสับ (7-11)", cal: 580, p: 20, c: 62, f: 28, cat: "main" },
+  { name: "ข้าวผัดปู (Big C)", cal: 450, p: 15, c: 65, f: 14, cat: "main" },
+  { name: "ข้าวพะแนงหมู (CP)", cal: 480, p: 16, c: 58, f: 20, cat: "main" },
+  { name: "สปาเก็ตตี้ขี้เมาไก่", cal: 420, p: 20, c: 55, f: 12, cat: "main" },
+  { name: "ข้าวกล้อง+อกไก่นุ่ม (7-11)", cal: 350, p: 28, c: 45, f: 5, cat: "main" },
+  { name: "แซนวิชแฮมชีส (อบร้อน)", cal: 300, p: 12, c: 30, f: 15, cat: "main" },
+  { name: "ข้าวลาบหมู+ไข่ต้ม", cal: 450, p: 25, c: 50, f: 16, cat: "main" },
+  { name: "ข้าวมันไก่ (ไม่หนัง)", cal: 550, p: 22, c: 70, f: 20, cat: "main" },
+  { name: "สุกี้น้ำไก่ (ตามสั่ง)", cal: 280, p: 20, c: 30, f: 8, cat: "main" },
+  { name: "ข้าวหมูกระเทียม (7-11)", cal: 510, p: 19, c: 62, f: 21, cat: "main" },
+  { name: "เส้นหมี่น้ำใสหมูสับ", cal: 320, p: 15, c: 45, f: 8, cat: "main" },
+  { name: "ข้าวน้ำพริกปลาทู+ผักต้ม", cal: 420, p: 25, c: 50, f: 12, cat: "main" },
+  { name: "ข้าวหน้าปลาซาบะย่าง", cal: 450, p: 22, c: 55, f: 15, cat: "main" },
+  { name: "ราดหน้าหมูหมัก", cal: 450, p: 18, c: 60, f: 15, cat: "main" },
+  { name: "ผัดไทยกุ้งสด", cal: 600, p: 20, c: 80, f: 22, cat: "main" },
+  { name: "ข้าวยำปักษ์ใต้", cal: 380, p: 12, c: 70, f: 6, cat: "main" },
+  { name: "ข้าวซอยไก่", cal: 550, p: 22, c: 60, f: 25, cat: "main" },
+  { name: "ต้มเลือดหมู+ข้าวสวย", cal: 400, p: 25, c: 50, f: 10, cat: "main" },
+  { name: "ข้าวหน้าเป็ดย่าง", cal: 580, p: 20, c: 65, f: 26, cat: "main" },
+  { name: "สลัดทูน่า (Subway style)", cal: 250, p: 18, c: 15, f: 12, cat: "main" },
+  { name: "ข้าวหมูแดง (สูตรนครปฐม)", cal: 560, p: 18, c: 75, f: 20, cat: "main" },
+  { name: "สปาเก็ตตี้ซอสมะเขือเทศหมูสับ", cal: 480, p: 20, c: 65, f: 15, cat: "main" },
+  { name: "บะหมี่แห้งต้มยำ", cal: 450, p: 15, c: 60, f: 16, cat: "main" },
+  { name: "สเต็กอกไก่+มันบด", cal: 400, p: 35, c: 35, f: 12, cat: "main" },
+  { name: "แกงเขียวหวานไก่+ข้าว", cal: 550, p: 20, c: 60, f: 25, cat: "main" },
+  { name: "ข้าวคลุกกะปิเครื่องครบ", cal: 580, p: 18, c: 70, f: 25, cat: "main" },
+  { name: "โจ๊กหมูเด้งใส่ไข่", cal: 350, p: 18, c: 45, f: 10, cat: "main" },
+  { name: "ข้าวหมูกรอบ (จานเดียว)", cal: 650, p: 18, c: 65, f: 35, cat: "main" },
+  { name: "เส้นใหญ่ผัดซีอิ๊วหมู", cal: 620, p: 20, c: 75, f: 26, cat: "main" },
+  { name: "สลัดโรลปูอัด", cal: 220, p: 8, c: 35, f: 5, cat: "main" },
+  { name: "ข้าวน้ำพริกลงเรือ", cal: 520, p: 15, c: 65, f: 22, cat: "main" },
+  { name: "ปลาเผา+ผัก+ข้าวเหนียว", cal: 500, p: 35, c: 60, f: 10, cat: "main" },
+  { name: "ตำไทย+ไก่ย่าง+ข้าวเหนียว", cal: 600, p: 30, c: 80, f: 18, cat: "main" },
+  { name: "บะหมี่กึ่งสำเร็จรูปต้มยำหมู", cal: 420, p: 14, c: 60, f: 14, cat: "main" },
+  { name: "ข้าวต้มปลาอินทรีย์", cal: 320, p: 22, c: 45, f: 6, cat: "main" },
+  { name: "เต้าหู้ทรงเครื่อง+ข้าว", cal: 400, p: 18, c: 55, f: 12, cat: "main" },
+  { name: "ข้าวหน้าไก่เทอริยากิ", cal: 520, p: 25, c: 70, f: 15, cat: "main" },
+  { name: "สเต็กปลาดอลลี่ย่าง", cal: 350, p: 25, c: 30, f: 14, cat: "main" },
+  { name: "ข้าวยำปลาทูย่าง", cal: 450, p: 26, c: 60, f: 12, cat: "main" },
+
+  // --- หมวดเสริมโปรตีน (Side - 20 รายการ) ---
+  { name: "อกไก่นุ่ม (7-11)", cal: 120, p: 24, c: 1, f: 2, cat: "side" },
+  { name: "ไข่ต้ม (2 ฟอง)", cal: 140, p: 12, c: 1, f: 10, cat: "side" },
+  { name: "ไข่ตุ๋นคัพ (7-11)", cal: 110, p: 9, c: 4, f: 7, cat: "side" },
+  { name: "นม High Protein (ทุกยี่ห้อ)", cal: 170, p: 28, c: 10, f: 2, cat: "side" },
+  { name: "ทูน่าในน้ำเกลือ (กระป๋อง)", cal: 140, p: 30, c: 0, f: 2, cat: "side" },
+  { name: "เต้าหู้ปลา (เสียบไม้)", cal: 120, p: 10, c: 12, f: 4, cat: "side" },
+  { name: "ไส้กรอกไก่ (CP)", cal: 160, p: 12, c: 4, f: 11, cat: "side" },
+  { name: "ปูอัด (ฉีกซอง)", cal: 90, p: 8, c: 12, f: 1, cat: "side" },
+  { name: "นมถั่วเหลือง (หวานน้อย)", cal: 130, p: 10, c: 12, f: 5, cat: "side" },
+  { name: "โยเกิร์ตโปรตีนสูง", cal: 120, p: 15, c: 10, f: 2, cat: "side" },
+  { name: "ชีสแผ่น (1 แผ่น)", cal: 60, p: 5, c: 1, f: 5, cat: "side" },
+  { name: "ถั่วแระญี่ปุ่น", cal: 140, p: 12, c: 10, f: 6, cat: "side" },
+  { name: "เนื้อปลากรอบ", cal: 110, p: 12, c: 8, f: 3, cat: "side" },
+  { name: "เวย์โปรตีน 1 สกู๊ป", cal: 120, p: 25, c: 3, f: 1, cat: "side" },
+  { name: "นมอัลมอนด์ (Unsweetened)", cal: 25, p: 1, c: 1, f: 2, cat: "side" },
+  { name: "หมูเส้น (ซองเล็ก)", cal: 150, p: 14, c: 12, f: 5, cat: "side" },
+  { name: "ไข่ลวก (2 ฟอง)", cal: 140, p: 12, c: 2, f: 10, cat: "side" },
+  { name: "โปรตีนเกษตรผัดพริกแกง", cal: 180, p: 15, c: 10, f: 8, cat: "side" },
+  { name: "น้ำเต้าหู้ (ไม่ใส่น้ำตาล)", cal: 100, p: 8, c: 8, f: 4, cat: "side" },
+  { name: "อกไก่แท่ง (7-11)", cal: 110, p: 20, c: 2, f: 2, cat: "side" },
+
+  // --- หมวดของว่าง/ผลไม้/อื่นๆ (Snack - 20 รายการ) ---
+  { name: "ถั่วอัลมอนด์ (แพ็คเล็ก)", cal: 160, p: 6, c: 6, f: 14, cat: "snack" },
+  { name: "โยเกิร์ต 0% Fat", cal: 80, p: 4, c: 15, f: 0, cat: "snack" },
+  { name: "กล้วยหอมทอง", cal: 100, p: 1, c: 27, f: 0, cat: "snack" },
+  { name: "ฝรั่ง (1 ผล)", cal: 120, p: 1, c: 30, f: 0, cat: "snack" },
+  { name: "มะละกอสุก (6-8 ชิ้น)", cal: 60, p: 0, c: 15, f: 0, cat: "snack" },
+  { name: "มันหวานญี่ปุ่น (ชิ้นเล็ก)", cal: 180, p: 2, c: 42, f: 0, cat: "snack" },
+  { name: "แอปเปิล (1 ลูก)", cal: 80, p: 0, c: 20, f: 0, cat: "snack" },
+  { name: "เม็ดมะม่วงหิมพานต์", cal: 170, p: 6, c: 9, f: 13, cat: "snack" },
+  { name: "ธัญพืชอัดแท่ง (Energy Bar)", cal: 120, p: 3, c: 20, f: 4, cat: "snack" },
+  { name: "ข้าวโพดต้ม (ครึ่งฝัก)", cal: 100, p: 3, c: 22, f: 1, cat: "snack" },
+  { name: "ส้มสายน้ำผึ้ง (2 ลูก)", cal: 100, p: 1, c: 24, f: 0, cat: "snack" },
+  { name: "แตงโม (1 จานเล็ก)", cal: 50, p: 1, c: 12, f: 0, cat: "snack" },
+  { name: "ขนมปังโฮลวีต (1 แผ่น)", cal: 70, p: 3, c: 12, f: 1, cat: "snack" },
+  { name: "กราโนล่า (30 กรัม)", cal: 150, p: 4, c: 25, f: 5, cat: "snack" },
+  { name: "วุ้นเส้นเย็นตาโฟคัพ", cal: 160, p: 2, c: 35, f: 1, cat: "snack" },
+  { name: "เฉาก๊วย (หวานน้อย)", cal: 120, p: 0, c: 30, f: 0, cat: "snack" },
+  { name: "น้ำใบบัวบก (ขวด)", cal: 70, p: 0, c: 18, f: 0, cat: "snack" },
+  { name: "ทาโร่ (ซองเล็ก)", cal: 80, p: 8, p: 12, f: 0, cat: "snack" },
+  { name: "ถั่วแระญี่ปุ่น (CP)", cal: 140, p: 12, c: 10, f: 6, cat: "snack" },
+  { name: "ดาร์กช็อกโกแลต (1 ชิ้น)", cal: 60, p: 1, c: 5, f: 4, cat: "snack" }
 ];
+let currentPlan = [];
 
-function generateMeal(){
- const target = parseInt(document.getElementById("targetCal").value);
- const meals = parseInt(document.getElementById("meals").value);
- if(!target){ alert("กรุณาใส่พลังงาน"); return; }
+window.onload = function() {
+  const savedData = localStorage.getItem('userHealthData');
+  if (savedData) {
+    const data = JSON.parse(savedData);
+    if(data.tdee) document.getElementById('targetCal').value = data.tdee;
+  }
+};
 
- let perMeal = Math.round(target / meals);
- let used = [];
- let html = `<h2 style="text-align:center; margin: 25px 0;">เป้าหมาย ${target} kcal</h2>`;
+function generateAllMeals() {
+  const target = parseInt(document.getElementById("targetCal").value);
+  const mealCount = parseInt(document.getElementById("meals").value);
+  if(!target) return alert("กรุณาใส่พลังงานเป้าหมาย");
 
- for(let m=1;m<=meals;m++){
-   let total=0, items=[];
-   let attempts = 0;
-   while(total < perMeal-80 && attempts < 20){
-     let f = foods[Math.floor(Math.random()*foods.length)];
-     if(!used.includes(f.name)){
-       items.push(f);
-       used.push(f.name);
-       total += f.cal;
-     }
-     attempts++;
-   }
-   html += `
-    <div class="meal-box">
-      <span class="meal-title">มื้อที่ ${m} (ประมาณ ${total} kcal)</span>
-      <ul class="food-list">`;
-   items.forEach(i=>{
-     html += `<li>${i.name} (${i.cal} kcal)</li>`;
-   });
-   html += `</ul></div>`;
- }
- document.getElementById("output").style.display="block";
- document.getElementById("output").innerHTML = html;
+  currentPlan = [];
+  const kcalPerMeal = target / mealCount;
+
+  for(let i=0; i < mealCount; i++) {
+    currentPlan.push(getRandomMeal(kcalPerMeal));
+  }
+  renderMeals();
+}
+
+function getRandomMeal(targetKcal) {
+  let mealKcal = 0;
+  let mealItems = [];
+  let attempts = 0;
+
+  while(mealKcal < targetKcal - 60 && attempts < 15) {
+    let pool = (mealKcal === 0) ? foods.filter(f => f.cat === "main") : foods;
+    let item = pool[Math.floor(Math.random() * pool.length)];
+    
+    if(!mealItems.includes(item)) {
+      mealItems.push(item);
+      mealKcal += item.cal;
+    }
+    attempts++;
+  }
+  return mealItems;
+}
+
+function rerollSingleMeal(index) {
+  const target = parseInt(document.getElementById("targetCal").value);
+  const mealCount = parseInt(document.getElementById("meals").value);
+  currentPlan[index] = getRandomMeal(target / mealCount);
+  renderMeals();
+}
+
+function renderMeals() {
+  const output = document.getElementById("output");
+  let html = "";
+
+  currentPlan.forEach((meal, idx) => {
+    let tCal = 0, tP = 0, tC = 0, tF = 0;
+    html += `<div class="meal-box">
+              <div class="meal-header">
+                <span class="meal-title">มื้อที่ ${idx + 1}</span>
+                <button class="reroll-btn" onclick="rerollSingleMeal(${idx})">🔄 สุ่มใหม่</button>
+              </div>`;
+    
+    meal.forEach(item => {
+      tCal += item.cal; tP += item.p; tC += item.c; tF += item.f;
+      html += `<div class="food-item">
+                <div>
+                  <div>${item.name}</div>
+                  <div class="pcf-tag">P: ${item.p}g | C: ${item.c}g | F: ${item.f}g</div>
+                </div>
+                <div style="font-weight:600">${item.cal} kcal</div>
+              </div>`;
+    });
+
+    html += `<div class="meal-summary">
+              <span>รวม: ${tCal} kcal</span>
+              <span class="p-color">P: ${tP}g</span>
+              <span class="c-color">C: ${tC}g</span>
+              <span class="f-color">F: ${tF}g</span>
+            </div></div>`;
+  });
+  output.innerHTML = html;
 }
 </script>
 </body>
