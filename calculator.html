@@ -4,18 +4,17 @@
   <meta charset="utf-8" />
   <title>คำนวณ TDEE & BMI</title>
   <link rel="stylesheet" href="style.css">
-  <!-- Chart.js -->
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <!-- html2canvas for PNG -->
   <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
 <body>
   <div class="navbar">
-  <a href="index.html">Home</a>
-  <a href="calculator.html" class="active">คำนวณ TDEE</a>
-  <a href="food.html">จัดเมนูอาหาร</a> <a href="knowledge.html">ทฤษฎี</a>
-  <a href="about.html">เกี่ยวกับเรา</a>
-</div>
+    <a href="index.html">Home</a>
+    <a href="calculator.html" class="active">คำนวณ TDEE</a>
+    <a href="food.html">จัดเมนูอาหาร</a> 
+    <a href="knowledge.html">ทฤษฎี</a>
+    <a href="about.html">เกี่ยวกับเรา</a>
+  </div>
 
   <div class="container">
     <div class="card" id="capture-area">
@@ -40,7 +39,7 @@
             <option value="1.375">ออกกำลังกายเบาๆ (1-2 วัน/สัปดาห์)</option>
             <option value="1.55">ออกกำลังกายระดับปานกลาง (3-5 วัน/สัปดาห์)</option>
             <option value="1.725">ออกกำลังกายหนัก (6-7 วัน/สัปดาห์)</option>
-            <option value="1.9">นักกีฬา (วันละ2ครั้ง)</option>
+            <option value="1.9">นักกีฬา (วันละ 2 ครั้ง)</option>
           </select>
         </div>
       </div>
@@ -57,21 +56,26 @@
       </div>
 
       <div class="row">
-  <div class="col">
-    <button class="btn btn-primary" onclick="calculate()">คำนวณผลลัพธ์</button>
-  </div>
-  <div class="col">
-    <button class="btn btn-reset" onclick="resetForm()">รีเซ็ตข้อมูล</button>
-  </div>
-</div>
-
+        <div class="col">
+          <button class="btn btn-primary" onclick="calculate()">คำนวณผลลัพธ์</button>
+        </div>
+        <div class="col">
+          <button class="btn btn-reset" onclick="resetForm()">รีเซ็ตข้อมูล</button>
+        </div>
+      </div>
 
       <div id="result" class="result-box" style="display:none;">
 
-        <!-- กล่องน้ำหนักที่เหมาะสม (แก้ id ให้ตรง) -->
-        <div class="card" style="margin-bottom:15px;">
-          <h3>น้ำหนักที่เหมาะสม</h3>
-          <p id="idealWeight">–</p>
+        <div class="card" style="margin-bottom:15px; padding: 25px;">
+          <h3 style="margin:0;">น้ำหนักที่เหมาะสม</h3>
+          <p id="idealWeight" style="font-size: 1.1rem; margin-top: 10px;">–</p>
+        </div>
+
+        <div id="healthAlert" style="padding: 20px; border-radius: 18px; margin-bottom: 20px; display: none; border-left: 8px solid; text-align: left;">
+          <h3 id="alertTitle" style="margin: 0; font-size: 1.2rem; display: flex; align-items: center; gap: 10px; -webkit-text-fill-color: inherit !important;">
+            <span id="alertIcon"></span> <span id="alertTitleText"></span>
+          </h3>
+          <p id="alertText" style="margin: 8px 0 0 0; font-size: 0.95rem; color: #4a5568;"></p>
         </div>
 
         <div class="result-row">
@@ -93,15 +97,15 @@
         </div>
 
         <div style="margin-top:12px;" class="small">
-          <strong>คำแนะนำ:</strong> ปรับปริมาณแคลอรีโดยเพิ่ม/ลดประมาณ 300 kcal หากต้องการเพิ่มหรือลดน้ำหนักอย่างค่อยเป็นค่อยไป
+          <strong>คำแนะนำเพิ่มเติม:</strong> ปรับปริมาณแคลอรีโดยเพิ่ม/ลดประมาณ 300 kcal หากต้องการปรับน้ำหนักอย่างค่อยเป็นค่อยไป
         </div>
       </div>
 
       <canvas id="chart" style="margin-top:18px; max-height:320px;"></canvas>
 
       <div class="center" style="margin-top:14px;">
-  <button class="btn-save-png" onclick="savePNG()">SAVE เป็น PNG</button>
-</div>
+        <button class="btn-save-png" onclick="savePNG()">SAVE เป็น PNG</button>
+      </div>
     </div>
   </div>
 
