@@ -1,4 +1,3 @@
-// app.js
 let chartInstance = null;
 
 // เรียกคืนข้อมูลเมื่อเปิดหน้าเว็บ
@@ -6,7 +5,6 @@ window.onload = function() {
     const savedData = localStorage.getItem('userHealthData');
     if (savedData) {
         const data = JSON.parse(savedData);
-        // ตรวจสอบว่ามี Element ก่อนค่อยใส่ค่า (กัน Error ในหน้าอื่น)
         if(document.getElementById('gender')) document.getElementById('gender').value = data.gender;
         if(document.getElementById('age')) document.getElementById('age').value = data.age;
         if(document.getElementById('weight')) document.getElementById('weight').value = data.weight;
@@ -17,7 +15,6 @@ window.onload = function() {
     }
 };
 
-// ฟังก์ชันล้างข้อมูล (ปุ่มรีเซ็ต)
 function resetForm() {
     localStorage.removeItem('userHealthData');
     document.getElementById('age').value = '';
@@ -28,10 +25,9 @@ function resetForm() {
         chartInstance.destroy();
         chartInstance = null;
     }
-    location.reload(); // รีเฟรชหน้าเพื่อให้ค่าเริ่มต้นกลับมา
+    location.reload();
 }
 
-// ฟังก์ชันคำนวณน้ำหนักที่เหมาะสม (Robinson & Miller Formula)
 function calcIdealWeight(height, gender) {
   let robinson, miller;
   if (gender === "male") {
@@ -56,29 +52,24 @@ function calculate() {
 
     if (!age || !weight || !height) return;
 
-    // สูตร Mifflin-St Jeor
     let bmr = (10 * weight) + (6.25 * height) - (5 * age);
     bmr = (gender === "male") ? bmr + 5 : bmr - 161;
     const tdee = bmr * activity;
     const hM = height / 100;
     const bmi = weight / (hM * hM);
 
-    // บันทึกข้อมูลลง localStorage
     const dataToSave = { gender, age, weight, height, activity, tdee: tdee.toFixed(0) };
     localStorage.setItem('userHealthData', JSON.stringify(dataToSave));
 
-    // แสดงผลบนหน้าจอ
     document.getElementById('result').style.display = 'block';
     document.getElementById('bmiVal').innerText = bmi.toFixed(2);
     document.getElementById('bmrVal').innerText = bmr.toFixed(0);
     document.getElementById('tdeeVal').innerText = tdee.toFixed(0);
 
-    // แสดงน้ำหนักที่เหมาะสม
     const ideal = calcIdealWeight(height, gender);
     document.getElementById('idealWeight').innerHTML = 
         `น้ำหนักที่เหมาะสมของคุณคือ <b>${ideal.min} - ${ideal.max} กก.</b>`;
 
-    // ปรับสถานะ BMI
     const bmiStatus = document.getElementById('bmiStatus');
     if(bmi < 18.5) bmiStatus.innerText = 'น้ำหนักน้อยกว่ามาตรฐาน';
     else if(bmi < 23) bmiStatus.innerText = 'ปกติ (สุขภาพดี)';
@@ -86,7 +77,38 @@ function calculate() {
     else if(bmi < 30) bmiStatus.innerText = 'อ้วนระดับ 1';
     else bmiStatus.innerText = 'อ้วนระดับ 2';
 
-    // วาดกราฟใหม่โดยใช้ชุดข้อมูล 4 แท่งเหมือนเดิม
+    // ✅ ส่วนควบคุมกล่องแจ้งเตือน (แก้ไขปีกกาให้แล้ว)
+    const alertBox = document.getElementById('healthAlert');
+    const alertTitleText = document.getElementById('alertTitleText');
+    const alertIcon = document.getElementById('alertIcon');
+    const alertText = document.getElementById('alertText');
+
+    if (alertBox) {
+        alertBox.style.display = 'block';
+        
+        if (bmi < 18.5) {
+            alertBox.className = "alert-warning-box";
+            alertIcon.innerHTML = "🟡";
+            alertTitleText.innerText = "น้ำหนักน้อยกว่าเกณฑ์";
+            alertText.innerText = "คุณควรทานอาหารที่มีพลังงานและโปรตีนสูงขึ้น เพื่อให้ร่างกายมีมวลกล้ามเนื้อและสุขภาพที่แข็งแรงครับ";
+        } else if (bmi < 23) {
+            alertBox.className = "alert-success-box";
+            alertIcon.innerHTML = "🟢"; 
+            alertTitleText.innerText = "สุขภาพนํ้าหนักปกติดี";
+            alertText.innerText = "น้ำหนักตัวของคุณสมดุลดีแล้ว รักษาสุขภาพและพฤติกรรมการทานอาหารที่ดีต่อไปนะครับ";
+        } else if (bmi < 25) {
+            alertBox.className = "alert-warning-box";
+            alertIcon.innerHTML = "🟠";
+            alertTitleText.innerText = "น้ำหนักเกินมาตรฐาน";
+            alertText.innerText = "ควรเริ่มควบคุมปริมาณน้ำตาลและไขมัน พร้อมทั้งออกกำลังกายสม่ำเสมอเพื่อป้องกันภาวะอ้วนครับ";
+        } else {
+            alertBox.className = "alert-danger-box";
+            alertIcon.innerHTML = "🔴";
+            alertTitleText.innerText = "ภาวะอ้วน / เสี่ยงโรค";
+            alertText.innerText = "แนะนำให้ปรึกษาผู้เชี่ยวชาญหรือปรับเปลี่ยนพฤติกรรมการทานอาหารและออกกำลังกายอย่างจริงจังครับ";
+        }
+    }
+
     const labels = ['BMR', 'TDEE', 'ลด -300', 'เพิ่ม +300'];
     const deficit = Math.max(0, tdee - 300);
     const surplus = tdee + 300;
