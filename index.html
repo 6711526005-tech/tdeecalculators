@@ -4,31 +4,73 @@
   <meta charset="utf-8" />
   <title>Health Tools - Home</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* สไตล์เฉพาะสำหรับหน้าแรกเพื่อให้เหมือนรูปที่ส่งมา */
+    .step-container {
+      display: flex;
+      gap: 15px;
+      margin: 30px 0;
+      justify-content: space-between;
+    }
+    .step-card {
+      background: white;
+      border-radius: 20px;
+      padding: 20px;
+      flex: 1;
+      text-align: center;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+      border: 1px solid #f0f4f8;
+    }
+    .step-icon { font-size: 30px; margin-bottom: 15px; display: block; }
+    .step-title { font-weight: 700; color: #1a202c; margin-bottom: 8px; font-size: 1rem; }
+    .step-desc { font-size: 0.85rem; color: #718096; line-height: 1.4; }
+    
+    @media (max-width: 600px) {
+      .step-container { flex-direction: column; }
+    }
+  </style>
 </head>
 <body>
   <div class="navbar">
-  <a href="index.html" class="active">Home</a>
-  <a href="calculator.html">คำนวณ TDEE</a>
-  <a href="food.html">จัดเมนูอาหาร</a> <a href="knowledge.html">ทฤษฎี</a>
-  <a href="about.html">เกี่ยวกับเรา</a>
-</div>
+    <a href="index.html" class="active">Home</a>
+    <a href="calculator.html">คำนวณ TDEE</a>
+    <a href="food.html">จัดเมนูอาหาร</a> 
+    <a href="knowledge.html">ทฤษฎี</a>
+    <a href="about.html">เกี่ยวกับเรา</a>
+  </div>
 
   <div class="container">
     <div class="card">
       <h1>🍃 TDEE & BMI Tools</h1>
-      <p class="small">เครื่องมือช่วยคำนวณพลังงานที่ร่างกายใช้ต่อวัน (TDEE) และค่าดัชนีมวลกาย (BMI)</p>
+      <p class="small" style="text-align: center;">เครื่องมือช่วยคำนวณพลังงานที่ร่างกายใช้ต่อวัน และค่าดัชนีมวลกาย</p>
     </div>
 
-    <div class="card">
-      <h2>วิธีใช้งาน</h2>
-      <ul class="small">
-        <li>ไปที่หน้า <strong>คำนวณ TDEE</strong> เพื่อกรอกข้อมูลและดูผล</li>
-        <li>ผลจะมี BMR, TDEE, BMI และกราฟเปรียบเทียบ</li>
-        <li>กด <strong>ดาวน์โหลดผลลัพธ์เป็น PNG</strong> เพื่อเก็บไฟล์ภาพประกอบรายงาน</li>
-      </ul>
-      <div class="center" style="margin-top:14px;">
-        <a href="calculator.html"><button class="btn">เริ่มคำนวณ</button></a>
+    <h2 style="text-align: center; margin-bottom: 20px;">วิธีใช้งาน 3 ขั้นตอน</h2>
+    
+    <div class="step-container">
+      <div class="step-card" style="border-top: 4px solid #03a9f4;">
+        <span class="step-icon">📊</span>
+        <div class="step-title">1. คำนวณ TDEE</div>
+        <div class="step-desc">กรอกข้อมูลส่วนตัวเพื่อหาพลังงานที่ร่างกายต้องการจริงต่อวัน</div>
       </div>
+      
+      <div class="step-card" style="border-top: 4px solid #2e8b57;">
+        <span class="step-icon">🍱</span>
+        <div class="step-title">2. วางแผนการกิน</div>
+        <div class="step-desc">นำพลังงานมาจัดมื้ออาหารที่หาซื้อได้จริง พร้อมสารอาหารครบถ้วน</div>
+      </div>
+      
+      <div class="step-card" style="border-top: 4px solid #ff9800;">
+        <span class="step-icon">📸</span>
+        <div class="step-title">3. บันทึกผลลัพธ์</div>
+        <div class="step-desc">ดาวน์โหลดข้อมูลเป็นรูปภาพ PNG เพื่อเก็บไว้ดูหรือแชร์ให้เทรนเนอร์</div>
+      </div>
+    </div>
+
+    <div class="center" style="margin-top: 30px; display: flex; justify-content: center;">
+      <a href="calculator.html" style="text-decoration: none;">
+        <button class="btn-yellow-glow">เริ่มคำนวณเลย</button>
+      </a>
     </div>
   </div>
 </body>
