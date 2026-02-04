@@ -23,9 +23,8 @@
   .c-color { color: #3182ce; } 
   .f-color { color: #d69e2e; }
 
-  /* แก้ไขปุ่มเบียด: เพิ่มระยะห่างจากช่อง select */
   #meals { margin-bottom: 30px !important; }
-  .gen-btn { margin-top: 10px; margin-bottom: 10px; }
+  .gen-btn { margin-top: 10px; margin-bottom: 10px; width: 100%; padding: 12px; cursor: pointer; }
 </style>
 </head>
 <body>
@@ -62,9 +61,8 @@
 </div>
 
 <script>
-// ===== ฐานข้อมูลอาหาร 80 รายการ (คละแหล่งที่มา: ตามสั่ง, 7-11, ห้าง, สายสุขภาพ) =====
 const foods = [
-  // --- หมวดจานหลัก (Main - 40 รายการ) ---
+  // --- หมวดจานหลัก (Main - 40 รายการแรก) ---
   { name: "ข้าวกะเพราอกไก่+ไข่ดาว", cal: 520, p: 35, c: 55, f: 18, cat: "main" },
   { name: "ข้าวกะเพราหมูสับ (7-11)", cal: 580, p: 20, c: 62, f: 28, cat: "main" },
   { name: "ข้าวผัดปู (Big C)", cal: 450, p: 15, c: 65, f: 14, cat: "main" },
@@ -106,7 +104,7 @@ const foods = [
   { name: "สเต็กปลาดอลลี่ย่าง", cal: 350, p: 25, c: 30, f: 14, cat: "main" },
   { name: "ข้าวยำปลาทูย่าง", cal: 450, p: 26, c: 60, f: 12, cat: "main" },
 
-  // --- หมวดเสริมโปรตีน (Side - 20 รายการ) ---
+  // --- หมวดเสริมโปรตีน (Side) ---
   { name: "อกไก่นุ่ม (7-11)", cal: 120, p: 24, c: 1, f: 2, cat: "side" },
   { name: "ไข่ต้ม (2 ฟอง)", cal: 140, p: 12, c: 1, f: 10, cat: "side" },
   { name: "ไข่ตุ๋นคัพ (7-11)", cal: 110, p: 9, c: 4, f: 7, cat: "side" },
@@ -128,7 +126,7 @@ const foods = [
   { name: "น้ำเต้าหู้ (ไม่ใส่น้ำตาล)", cal: 100, p: 8, c: 8, f: 4, cat: "side" },
   { name: "อกไก่แท่ง (7-11)", cal: 110, p: 20, c: 2, f: 2, cat: "side" },
 
-  // --- หมวดของว่าง/ผลไม้/อื่นๆ (Snack - 20 รายการ) ---
+  // --- หมวดของว่าง/ผลไม้/อื่นๆ (Snack) ---
   { name: "ถั่วอัลมอนด์ (แพ็คเล็ก)", cal: 160, p: 6, c: 6, f: 14, cat: "snack" },
   { name: "โยเกิร์ต 0% Fat", cal: 80, p: 4, c: 15, f: 0, cat: "snack" },
   { name: "กล้วยหอมทอง", cal: 100, p: 1, c: 27, f: 0, cat: "snack" },
@@ -146,10 +144,97 @@ const foods = [
   { name: "วุ้นเส้นเย็นตาโฟคัพ", cal: 160, p: 2, c: 35, f: 1, cat: "snack" },
   { name: "เฉาก๊วย (หวานน้อย)", cal: 120, p: 0, c: 30, f: 0, cat: "snack" },
   { name: "น้ำใบบัวบก (ขวด)", cal: 70, p: 0, c: 18, f: 0, cat: "snack" },
-  { name: "ทาโร่ (ซองเล็ก)", cal: 80, p: 8, p: 12, f: 0, cat: "snack" },
+  { name: "ทาโร่ (ซองเล็ก)", cal: 80, p: 8, c: 12, f: 0, cat: "snack" },
   { name: "ถั่วแระญี่ปุ่น (CP)", cal: 140, p: 12, c: 10, f: 6, cat: "snack" },
-  { name: "ดาร์กช็อกโกแลต (1 ชิ้น)", cal: 60, p: 1, c: 5, f: 4, cat: "snack" }
+  { name: "ดาร์กช็อกโกแลต (1 ชิ้น)", cal: 60, p: 1, c: 5, f: 4, cat: "snack" },
+
+  // --- เมนูจานหลักใหม่ (Main - อีก 40 รายการ) ---
+  { name: "ปลากระพงนึ่งซีอิ๊ว+ข้าวสวย", cal: 380, p: 32, c: 50, f: 6, cat: "main" },
+  { name: "ลาบปลาดุกย่าง+ผักสด", cal: 350, p: 28, c: 15, f: 18, cat: "main" },
+  { name: "ข้าวหน้าปลาดอลลี่ลุยสวน", cal: 320, p: 24, c: 45, f: 5, cat: "main" },
+  { name: "สเต็กปลาแซลมอนย่างเกลือ", cal: 450, p: 30, c: 10, f: 22, cat: "main" },
+  { name: "แกงส้มปลากะพงผักรวม+ข้าว", cal: 340, p: 25, c: 55, f: 3, cat: "main" },
+  { name: "ข้าวผัดพริกแกงอกไก่ใส่ถั่วฝักยาว", cal: 420, p: 30, c: 55, f: 10, cat: "main" },
+  { name: "ยำวุ้นเส้นหมูสับ (เน้นผัก)", cal: 280, p: 18, c: 40, f: 6, cat: "main" },
+  { name: "ต้มจืดฟักเขียวอกไก่+ข้าวสวย", cal: 320, p: 22, c: 50, f: 4, cat: "main" },
+  { name: "พะแนงอกไก่ (กะทิน้อย)+ข้าวสวย", cal: 450, p: 28, c: 55, f: 14, cat: "main" },
+  { name: "ข้าวเหนียว+หมูทอดเชียงราย (เล็ก)", cal: 580, p: 22, c: 70, f: 25, cat: "main" },
+  { name: "บะหมี่น้ำต้มยำปลาเส้น", cal: 320, p: 18, c: 50, f: 5, cat: "main" },
+  { name: "เย็นตาโฟเครื่องปลา (ไม่ใส่เลือด)", cal: 350, p: 15, c: 60, f: 4, cat: "main" },
+  { name: "ข้าวคั่วกลิ้งอกไก่+ไข่ต้ม", cal: 480, p: 35, c: 55, f: 12, cat: "main" },
+  { name: "เนื้อวัวสันในย่างจิ้มแจ่ว+ข้าวเหนียว", cal: 550, p: 35, c: 65, f: 16, cat: "main" },
+  { name: "เตี๋ยวลุยสวนไก่สับ (5 ชิ้น)", cal: 220, p: 12, c: 35, f: 4, cat: "main" },
+  { name: "ราเมงโชยุ (เน้นหมูชาชูเนื้อแดง)", cal: 480, p: 25, c: 65, f: 12, cat: "main" },
+  { name: "ข้าวมันไก่ผสม (เนื้ออก+ทอดเล็กน้อย)", cal: 620, p: 24, c: 80, f: 25, cat: "main" },
+  { name: "ยำมาม่ารวมมิตรทะเล", cal: 450, p: 20, c: 65, f: 12, cat: "main" },
+  { name: "สลัดกุ้งย่างซอสน้ำมันงา", cal: 280, p: 22, c: 15, f: 14, cat: "main" },
+  { name: "ข้าวหน้าเนื้อกิวดง (เนื้อไขมันน้อย)", cal: 520, p: 26, c: 75, f: 12, cat: "main" },
+  { name: "ขนมจีนน้ำยาป่าปลาทู (ไม่กะทิ)", cal: 250, p: 15, c: 45, f: 2, cat: "main" },
+  { name: "ข้าวราดคะน้าอกไก่ (น้ำมันน้อย)", cal: 390, p: 28, c: 55, f: 7, cat: "main" },
+  { name: "กุ้งอบวุ้นเส้นหม้อดิน", cal: 380, p: 22, c: 60, f: 6, cat: "main" },
+  { name: "ข้าวหมกไก่ (ไม่ใส่หนัง)", cal: 540, p: 25, c: 75, f: 15, cat: "main" },
+  { name: "เกาเหลาเลือดหมูไม่ใส่เครื่องใน+ข้าว", cal: 380, p: 30, c: 50, f: 8, cat: "main" },
+  { name: "ก๋วยจั๊บญวนหมูยอ (สูตรปกติ)", cal: 480, p: 18, c: 75, f: 12, cat: "main" },
+  { name: "ข้าวผัดพริกแกงปลาดุกฟู", cal: 620, p: 15, c: 70, f: 30, cat: "main" },
+  { name: "สุกี้แห้งทะเล (น้ำมันน้อย)", cal: 350, p: 22, c: 40, f: 12, cat: "main" },
+  { name: "ข้าวไข่ขยี้อกไก่สับ", cal: 420, p: 28, c: 55, f: 10, cat: "main" },
+  { name: "พาสต้าผัดพริกแห้งเบคอน (เลี่ยนน้อย)", cal: 480, p: 16, c: 65, f: 18, cat: "main" },
+  { name: "เต้าหู้ขาวนึ่งซีอิ๊ว+ข้าว", cal: 320, p: 15, c: 55, f: 5, cat: "main" },
+  { name: "ซุปกิมจิเต้าหู้+ข้าวสวย", cal: 350, p: 15, c: 60, f: 6, cat: "main" },
+  { name: "ข้าวต้มกระดูกอ่อนหมู", cal: 320, p: 18, c: 45, f: 8, cat: "main" },
+  { name: "สเต็กพอร์คชอปย่างพริกไทยดำ", cal: 520, p: 35, c: 20, f: 25, cat: "main" },
+  { name: "ข้าวน้ำพริกแจ่วบอง+ผัก+ไข่ต้ม", cal: 400, p: 20, c: 65, f: 8, cat: "main" },
+  { name: "เบอร์เกอร์ไก่ย่าง (Single)", cal: 380, p: 22, c: 35, f: 15, cat: "main" },
+  { name: "ข้าวราดผัดผักบุ้งไฟแดงอกไก่", cal: 360, p: 26, c: 50, f: 6, cat: "main" },
+  { name: "ต้มแซ่บเนื้อวัวสันใน+ข้าวสวย", cal: 450, p: 35, c: 55, f: 12, cat: "main" },
+  { name: "ข้าวหน้าเป็ดพะโล้ (ลอกหนัง)", cal: 480, p: 24, c: 65, f: 14, cat: "main" },
+  { name: "พิซซ่าหน้าผัก (1 ชิ้นหนานุ่ม)", cal: 280, p: 10, c: 35, f: 12, cat: "main" },
+
+  // --- หมวดเสริมโปรตีน/ของเคียง (Side - ชุดที่ 2) ---
+  { name: "ทอดมันปลากราย (4 ชิ้น)", cal: 240, p: 15, c: 10, f: 15, cat: "side" },
+  { name: "ลูกชิ้นอกไก่ปิ้ง (4 ไม้)", cal: 180, p: 22, c: 15, f: 4, cat: "side" },
+  { name: "ยำแมงกะพรุนน้ำมันงา", cal: 120, p: 10, c: 5, f: 8, cat: "side" },
+  { name: "ปลากระป๋องในซอสมะเขือเทศ", cal: 160, p: 18, c: 8, f: 6, cat: "side" },
+  { name: "หมูยออุบล (นึ่ง)", cal: 180, p: 12, c: 10, f: 10, cat: "side" },
+  { name: "กุ้งแช่น้ำปลา", cal: 150, p: 20, c: 5, f: 5, cat: "side" },
+  { name: "ไข่เจียวสมุนไพร (น้ำมันน้อย)", cal: 220, p: 13, c: 4, f: 18, cat: "side" },
+  { name: "ไก่จ๊อ (5 ลูก)", cal: 250, p: 10, c: 12, f: 18, cat: "side" },
+  { name: "ยำไข่เค็มสมุนไพร", cal: 180, p: 8, c: 10, f: 12, cat: "side" },
+  { name: "ตับไก่ปิ้ง (2 ไม้)", cal: 160, p: 18, c: 2, f: 8, cat: "side" },
+  { name: "เห็ดออรินจิผัดเนย", cal: 140, p: 4, c: 8, f: 10, cat: "side" },
+  { name: "แหนมเนือง (1 คำเน้นผัก)", cal: 80, p: 5, c: 10, f: 3, cat: "side" },
+  { name: "สาหร่ายวากาเมะปรุงรส", cal: 60, p: 2, c: 8, f: 2, cat: "side" },
+  { name: "เนื้อย่างเสียบไม้ (2 ไม้)", cal: 180, p: 16, c: 2, f: 12, cat: "side" },
+  { name: "หมูปิ้งโบราณ (1 ไม้)", cal: 130, p: 8, c: 5, f: 9, cat: "side" },
+  { name: "ขนมจีบกุ้ง (3 ลูก)", cal: 120, p: 8, c: 12, f: 4, cat: "side" },
+  { name: "กุ่ยช่ายนึ่ง (1 ชิ้น)", cal: 90, p: 2, c: 18, f: 1, cat: "side" },
+  { name: "ปีกไก่ทอดเกลือ (1 ปีก)", cal: 110, p: 8, c: 1, f: 8, cat: "side" },
+  { name: "เกี๊ยวกุ้งน้ำคัพ", cal: 140, p: 10, c: 18, f: 3, cat: "side" },
+  { name: "นมถั่วเหลืองผสมงาดำ", cal: 150, p: 9, c: 15, f: 6, cat: "side" },
+
+  // --- หมวดขนม/ผลไม้/ของหวาน (Snack - ชุดที่ 2) ---
+  { name: "บัวลอยน้ำขิง (หวานน้อย)", cal: 180, p: 2, c: 35, f: 4, cat: "snack" },
+  { name: "ถั่วเขียวต้มน้ำตาล", cal: 160, p: 6, c: 35, f: 0, cat: "snack" },
+  { name: "มันหนึบญี่ปุ่น", cal: 150, p: 2, c: 35, f: 0, cat: "snack" },
+  { name: "มะม่วงน้ำดอกไม้ (ครึ่งซีก)", cal: 80, p: 1, c: 20, f: 0, cat: "snack" },
+  { name: "สับปะรด (6-8 ชิ้น)", cal: 50, p: 0, c: 13, f: 0, cat: "snack" },
+  { name: "พุดดิ้งคัสตาร์ด (เล็ก)", cal: 180, p: 4, c: 25, f: 8, cat: "snack" },
+  { name: "ขนมปังเนยโสด (ครึ่งชิ้นเล็ก)", cal: 250, p: 4, c: 30, f: 12, cat: "snack" },
+  { name: "ไอศกรีมเชอร์เบท (1 สกู๊ป)", cal: 120, p: 0, c: 30, f: 0, cat: "snack" },
+  { name: "คุกกี้ข้าวโอ๊ต (1 ชิ้น)", cal: 90, p: 2, c: 15, f: 3, cat: "snack" },
+  { name: "ลูกพรุนแห้ง (3 เม็ด)", cal: 70, p: 1, c: 18, f: 0, cat: "snack" },
+  { name: "โยเกิร์ตราสเบอร์รี่", cal: 110, p: 4, c: 20, f: 2, cat: "snack" },
+  { name: "เยลลี่ผลไม้ 0 แคลอรี่", cal: 5, p: 0, c: 1, f: 0, cat: "snack" },
+  { name: "ป๊อปคอร์นรสเค็ม (1 กำมือ)", cal: 100, p: 2, c: 15, f: 4, cat: "snack" },
+  { name: "ขนมถ้วย (1 คู่)", cal: 160, p: 2, c: 25, f: 6, cat: "snack" },
+  { name: "ทับทิมกรอบ (ถ้วยเล็ก)", cal: 220, p: 1, c: 45, f: 4, cat: "snack" },
+  { name: "ถั่วลายเสือคั่ว", cal: 160, p: 7, c: 8, f: 12, cat: "snack" },
+  { name: "น้ำส้มคั้นสด (แก้วเล็ก)", cal: 90, p: 1, c: 20, f: 0, cat: "snack" },
+  { name: "ชามะนาว (หวาน 25%)", cal: 60, p: 0, c: 15, f: 0, cat: "snack" },
+  { name: "กาแฟลาเต้ (นมพิทาชิโอ)", cal: 80, p: 2, c: 8, f: 5, cat: "snack" },
+  { name: "บลูเบอร์รี่สด (1 ถ้วยเล็ก)", cal: 80, p: 1, c: 20, f: 0, cat: "snack" }
 ];
+
 let currentPlan = [];
 
 window.onload = function() {
@@ -161,9 +246,11 @@ window.onload = function() {
 };
 
 function generateAllMeals() {
-  const target = parseInt(document.getElementById("targetCal").value);
+  const targetInput = document.getElementById("targetCal");
+  const target = parseInt(targetInput.value);
   const mealCount = parseInt(document.getElementById("meals").value);
-  if(!target) return alert("กรุณาใส่พลังงานเป้าหมาย");
+  
+  if(!target || target <= 0) return alert("กรุณาใส่พลังงานเป้าหมายที่ถูกต้อง");
 
   currentPlan = [];
   const kcalPerMeal = target / mealCount;
@@ -179,13 +266,15 @@ function getRandomMeal(targetKcal) {
   let mealItems = [];
   let attempts = 0;
 
-  while(mealKcal < targetKcal - 60 && attempts < 15) {
+  while(mealKcal < targetKcal - 50 && attempts < 20) {
     let pool = (mealKcal === 0) ? foods.filter(f => f.cat === "main") : foods;
     let item = pool[Math.floor(Math.random() * pool.length)];
     
-    if(!mealItems.includes(item)) {
-      mealItems.push(item);
-      mealKcal += item.cal;
+    if(!mealItems.some(existing => existing.name === item.name)) {
+      if (mealKcal + item.cal <= targetKcal + 100) {
+        mealItems.push(item);
+        mealKcal += item.cal;
+      }
     }
     attempts++;
   }
