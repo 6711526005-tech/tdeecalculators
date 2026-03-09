@@ -5,7 +5,7 @@
   --green-gradient: linear-gradient(135deg, #2e8b57 0%, #43a047 100%);
   --blue-gradient: linear-gradient(135deg, #03a9f4 0%, #00acc1 100%);
   --red-gradient: linear-gradient(135deg, #ff5252 0%, #d32f2f 100%);
-  --orange-gradient: linear-gradient(135deg, #ff9800 0%, #f57c00 100%); /* สีส้มทองใหม่ */
+  --orange-gradient: linear-gradient(135deg, #ff9800 0%, #f57c00 100%);
   --nav-gradient: linear-gradient(90deg, #2e8b57, #03a9f4);
   --text-main: #1a202c;
   --text-muted: #4a5568;
@@ -176,11 +176,11 @@ input, select {
 /* style.css - ส่วน RESULT AREA */
 
 .result-box, .result {
-  background: #ffffff !important; /* เปลี่ยนจาก #f0fdf4 เป็นสีขาว */
-  padding: 25px; /* เพิ่มพื้นที่ข้างในอีกนิดให้ดูโปร่ง */
-  border-radius: 24px; /* ปรับความโค้งให้มนเท่ากับ Card อื่นๆ */
-  border: 1px solid #e2e8f0; /* เปลี่ยนจากเส้นประสีเขียว เป็นเส้นขอบบางๆ สีเทาอ่อน */
-  box-shadow: 0 4px 15px rgba(0,0,0,0.05); /* เพิ่มเงานิดๆ ให้ดูเหมือนลอยขึ้นมา */
+  background: #ffffff !important; 
+  padding: 25px; 
+  border-radius: 24px; 
+  border: 1px solid #e2e8f0; 
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05); 
   margin-top: 25px;
 }
 
@@ -193,12 +193,12 @@ input, select {
   box-shadow: 0 4px 6px rgba(0,0,0,0.02);
 }
 
-/* --- ส่วนที่เน้นผลลัพธ์ตัวเลขให้เด่นขึ้น --- */
+
 .result-item {
   flex: 1;
   min-width: 160px;
   background: #ffffff;
-  padding: 20px 15px; /* เพิ่มพื้นที่ */
+  padding: 20px 15px; 
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(15,23,42,0.08);
   text-align: center;
@@ -207,7 +207,7 @@ input, select {
 }
 
 .result-item:hover {
-  transform: translateY(-5px); /* เวลาเมาส์ชี้ให้ขยับนิดๆ ดูมีมิติ */
+  transform: translateY(-5px); 
 }
 
 .kv { 
@@ -218,30 +218,28 @@ input, select {
   letter-spacing: 0.5px;
 }
 
-/* เน้นตัวเลขผลลัพธ์ให้ใหญ่และเด่น */
 .value { 
   display: block;
   font-weight: 800; 
-  font-size: 28px; /* ขยายขนาดตัวเลข */
+  font-size: 28px; 
   background: var(--nav-gradient);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   margin: 5px 0;
 }
 
-/* สถานะ BMI ให้ดูอ่านง่าย */
 #bmiStatus {
   display: inline-block;
   padding: 6px 16px;
-  background: #f8fafc; /* สีเทาจางๆ */
+  background: #f8fafc; 
   border: 1px solid #e2e8f0;
   border-radius: 20px;
   font-weight: 600;
-  color: #2e8b57; /* สีข้อความยังเป็นเขียวเหมือนเดิม */
+  color: #2e8b57; 
   margin-top: 10px;
 }
 
-/* --- ส่วนปุ่ม SAVE เป็น PNG (สีส้ม) --- */
+/* --- ปุ่ม SAVE เป็น PNG (สีส้ม) --- */
 .btn-save-png {
   background: var(--orange-gradient) !important;
   color: #fff !important;
@@ -259,12 +257,11 @@ input, select {
 }
 
 .btn-save-png:hover {
-  box-shadow: 0 8px 25px rgba(245, 124, 0, 0.5); /* เงาฟุ้งสีส้มตามที่ขอ */
+  box-shadow: 0 8px 25px rgba(245, 124, 0, 0.5); 
   transform: translateY(-3px);
   filter: brightness(1.1);
 }
 
-/* แต่งปุ่มเรืองแสงหน้าแรก (ใช้ค่าสีจาก Gradient เดิมของนาย) */
 .btn-home-glow {
   background: var(--nav-gradient) !important;
   color: white !important;
@@ -280,13 +277,12 @@ input, select {
 
 .btn-home-glow:hover {
   transform: translateY(-5px) scale(1.05);
-  box-shadow: 0 12px 30px rgba(46, 139, 87, 0.6); /* แสงฟุ้งสีเขียวตามแบบเว็บ */
+  box-shadow: 0 12px 30px rgba(46, 139, 87, 0.6);
 }
 
-/* ปุ่มสีเหลืองทองเรืองแสง ตามที่นายขอ */
 .btn-yellow-glow {
   background: linear-gradient(135deg, #fbc02d 0%, #f9a825 100%) !important;
-  color: #1a202c !important; /* ตัวหนังสือสีเข้มจะอ่านง่ายบนพื้นเหลือง */
+  color: #1a202c !important; 
   padding: 18px 60px !important;
   border-radius: 50px !important;
   font-weight: 700 !important;
@@ -299,28 +295,24 @@ input, select {
 
 .btn-yellow-glow:hover {
   transform: translateY(-5px) scale(1.05);
-  box-shadow: 0 12px 30px rgba(249, 168, 37, 0.6); /* แสงฟุ้งสีเหลืองทอง */
+  box-shadow: 0 12px 30px rgba(249, 168, 37, 0.6);
 }
-/* สีสำหรับกล่องแจ้งเตือนแนะนำสุขภาพ */
 .alert-success-box { background: #f0fdf4 !important; border-color: #2e8b57 !important; color: #166534 !important; }
 .alert-warning-box { background: #fffbeb !important; border-color: #f57c00 !important; color: #92400e !important; }
 .alert-danger-box { background: #fef2f2 !important; border-color: #d32f2f !important; color: #991b1b !important; }
 
-/* ปรับให้ Header ภายในกล่องแจ้งเตือนใช้สีตามกล่อง ไม่โดน Gradient ทับ */
 #healthAlert h3 {
   background: none !important;
   -webkit-text-fill-color: currentColor !important;
 }
-/* --- ปรับฟอนต์ปุ่มให้เป็น Kanit เหมือนหน้าอื่นๆ --- */
 
-/* ปุ่มเหลืองทองหน้าแรก */
 .btn-yellow-glow {
-    font-family: 'Kanit', sans-serif !important; /* บังคับใช้ฟอนต์ Kanit */
+    font-family: 'Kanit', sans-serif !important;
     background: linear-gradient(135deg, #fbc02d 0%, #f9a825 100%) !important;
     color: #1a202c !important;
     padding: 18px 60px !important;
     border-radius: 50px !important;
-    font-weight: 600 !important; /* ปรับความหนาให้พอดี */
+    font-weight: 600 !important;
     font-size: 1.2rem !important;
     box-shadow: 0 4px 15px rgba(249, 168, 37, 0.4);
     transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
@@ -328,7 +320,6 @@ input, select {
     cursor: pointer;
 }
 
-/* ปุ่ม Save PNG (สีส้ม) และปุ่มอื่นๆ */
 .btn-save-png, .btn, .gen-btn {
     font-family: 'Kanit', sans-serif !important;
     font-weight: 600 !important;
@@ -345,9 +336,7 @@ input, select {
     box-shadow: 0 12px 30px rgba(249, 168, 37, 0.6);
 }
 
-/* วางไว้ท้ายสุดของไฟล์ style.css */
 
-/* 1. ปรับกล่องผลลัพธ์หลักให้เป็นสีขาวสะอาดตา */
 .result-box, .result {
     background: #ffffff !important;
     border: 1px solid #e2e8f0 !important;
@@ -355,17 +344,15 @@ input, select {
     box-shadow: 0 4px 15px rgba(0,0,0,0.05) !important;
 }
 
-/* 2. ปรับสีกล่อง "สภาพร่างกายปกติ" ให้เขียวอ่อนนุ่มนวล (สีเดียวกับธีมเว็บ) */
 .alert-success-box { 
-    background: #f0fdf4 !important; /* เขียวอ่อนสบายตา */
-    border-left: 8px solid #43a047 !important; /* ใช้สีเขียวจากธีม Green Gradient ของนาย */
+    background: #f0fdf4 !important;
+    border-left: 8px solid #43a047 !important;
     border-top: 1px solid #e2e8f0 !important;
     border-right: 1px solid #e2e8f0 !important;
     border-bottom: 1px solid #e2e8f0 !important;
-    color: #2e7d32 !important; /* ตัวหนังสือเขียวเข้มอ่านง่าย */
+    color: #2e7d32 !important;
 }
 
-/* 3. ปรับให้หัวข้อในกล่องแจ้งเตือนใช้สีเดียวกับตัวหนังสือ ไม่โดนสีรุ้งทับ */
 #healthAlert h3 {
     background: none !important;
     -webkit-text-fill-color: currentColor !important;
